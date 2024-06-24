@@ -25,7 +25,6 @@ const fontSizes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     padding: spacing.large,
   },
   inputWrapper: {
@@ -87,6 +86,21 @@ const styles = StyleSheet.create({
   taskText: {
     fontSize: fontSizes.medium,
     color: colors.textPrimary,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginVertical: spacing.medium,
+  },
+  video: {
+    width: '100%',
+    height: 200,
+    marginVertical: spacing.medium,
+  },
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
 });
 
