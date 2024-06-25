@@ -24,7 +24,7 @@ const ImagePicker = ({ onImageSelected }) => {
 
     if (!result.canceled) {
       // если изображение было выбрано, вызывается функция onImageSelected с URI изображения
-      onImageSelected(result.assets[0].uri);
+      onImageSelected(result.uri);
     } else {
       console.log('User cancelled image picker'); // логирование отмены выбора изображения
     }
