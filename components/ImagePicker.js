@@ -6,32 +6,33 @@ import styles from '../styles';
 // компонент для выбора изображения из галереи
 const ImagePicker = ({ onImageSelected }) => {
   const pickImage = async () => {
-    // Запрос разрешений
+    // запрос разрешений на доступ к библиотеке изображений
     const permissionResult = await Picker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
+      // если разрешение не предоставлено, отображается предупреждение
       alert("Permission to access camera roll is required!");
       return;
     }
 
-    // Запуск библиотеки изображений
     const result = await Picker.launchImageLibraryAsync({
-      mediaTypes: Picker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      mediaTypes: Picker.MediaTypeOptions.Images, // выбор только изображений
+      allowsEditing: true, // пользователь может выбрать изображение и затем обрезать его до желаемого размера
+      aspect: [4, 3], // инструмент обрезки будет ограничен пропорциями 4:3
+      quality: 1, // качество изображения (1 - наилучшее)
     });
 
     if (!result.canceled) {
-      onImageSelected(result.assets[0].uri); // Используем result.uri, так как assets[0].uri не поддерживается expo-image-picker
+      // если изображение было выбрано, вызывается функция onImageSelected с URI изображения
+      onImageSelected(result.assets[0].uri);
     } else {
-      console.log('User cancelled image picker');
+      console.log('User cancelled image picker'); // логирование отмены выбора изображения
     }
   };
 
   return (
     <View>
-      <Button title="Pick an Image" onPress={pickImage} />
+      <Button title="Выбрать изображение" onPress={pickImage} />
     </View>
   );
 };
