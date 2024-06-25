@@ -65,4 +65,4 @@ const App = () => {
   );
 };
 
-export default App; // Экспорт компонента App по умолчанию
+export default App;

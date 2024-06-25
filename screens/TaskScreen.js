@@ -1,24 +1,38 @@
+// TaskScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles, { colors } from '../styles';
 
 // Компонент для отображения и редактирования конкретной задачи
 const TaskScreen = ({ route, navigation }) => {
-  const { taskKey, tasks, setTasks, isDarkTheme, categories } = route.params; // Получение параметров маршрута
+  const { taskKey, tasks, setTasks, isDarkTheme, categories } = route.params;
 
   useEffect(() => {
     // Логирование текущего списка задач при изменении tasks
     console.log('Tasks in TaskScreen:', tasks);
   }, [tasks]);
 
-  const task = tasks.find((t) => t.key === taskKey); // Поиск задачи по ключу
+  const task = tasks.find((t) => t.key === taskKey);
 
-  const [description, setDescription] = useState(task?.description || ''); // Состояние для хранения описания задачи
+  const [description, setDescription] = useState(task?.description || '');
 
-  // Функция для удаления задачи
+  // Функция для удаления задачи с подтверждением
   const handleDeleteTask = () => {
-    setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskKey)); // Фильтрация списка задач для удаления конкретной задачи
-    navigation.goBack(); // Возврат на предыдущий экран
+    Alert.alert(
+      "Удаление задачи",
+      "Вы уверены, что хотите удалить эту задачу?",
+      [
+        {
+          text: "Отмена",
+          style: "cancel"
+        },
+        { text: "Удалить", onPress: () => {
+          setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskKey));
+          navigation.goBack();
+        }}
+      ],
+      { cancelable: true }
+    );
   };
 
   // Функция для сохранения описания задачи
@@ -27,8 +41,8 @@ const TaskScreen = ({ route, navigation }) => {
       prevTasks.map((t) =>
         t.key === taskKey ? { ...t, description } : t
       )
-    ); // Обновление задачи с новым описанием
-    navigation.goBack(); // Возврат на предыдущий экран
+    );
+    navigation.goBack();
   };
 
   // Если задача не найдена, отображаем соответствующее сообщение
@@ -40,7 +54,7 @@ const TaskScreen = ({ route, navigation }) => {
     );
   }
 
-  const category = categories.find((c) => c.key === task.category)?.value || 'Без категории'; // Поиск категории задачи
+  const category = categories.find((c) => c.key === task.category)?.value || 'Без категории';
 
   return (
     <View style={isDarkTheme ? styles.darkTheme.container : styles.lightTheme.container}>
