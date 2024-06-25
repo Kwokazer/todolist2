@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, FlatList, TouchableOpacity, ImageBackground, Text, Button, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TaskInput from '../components/TaskInput';
 import CategoryInput from '../components/CategoryInput';
 import TaskItem from '../components/TaskItem';
-import { scheduleNotification } from '../utils/Notification'; // Импорт функции уведомлений
+import { scheduleNotification } from '../utils/Notification';
 import styles, { colors } from '../styles';
 
 const ToDoScreen = ({ navigation, isDarkTheme }) => {
@@ -22,6 +22,7 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         }
       } catch (error) {
         console.error('Failed to load tasks', error);
+        alert('Failed to load tasks from storage'); // Уведомление пользователя о неудачной загрузке
       }
     };
     loadTasks();
@@ -35,6 +36,7 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         }
       } catch (error) {
         console.error('Failed to load categories', error);
+        alert('Failed to load categories from storage'); // Уведомление пользователя о неудачной загрузке
       }
     };
     loadCategories();
@@ -47,6 +49,7 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
       } catch (error) {
         console.error('Failed to save tasks', error);
+        alert('Failed to save tasks to storage'); // Уведомление пользователя о неудачном сохранении
       }
     };
     saveTasks();
@@ -59,41 +62,42 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         await AsyncStorage.setItem('categories', JSON.stringify(categories));
       } catch (error) {
         console.error('Failed to save categories', error);
+        alert('Failed to save categories to storage'); // Уведомление пользователя о неудачном сохранении
       }
     };
     saveCategories();
   }, [categories]);
 
   // Функция добавления задачи
-  const addTask = (task, category) => {
+  const addTask = useCallback((task, category) => {
     if (task.length > 0 && category) {
       // Добавление задачи в список и планирование уведомления
       setTasks((prevTasks) => [...prevTasks, { key: Math.random().toString(), value: task, category }]);
-      scheduleNotification(task); // Планируем уведомление
+      scheduleNotification(task); // Планирование уведомления
     }
-  };
+  }, []);
 
   // Функция добавления категории
-  const addCategory = (category) => {
+  const addCategory = useCallback((category) => {
     if (category.length > 0) {
       // Добавление категории в список
       setCategories((prevCategories) => [...prevCategories, { key: Math.random().toString(), value: category }]);
     }
-  };
+  }, []);
 
   // Функция удаления задачи
-  const removeTask = (taskKey) => {
+  const removeTask = useCallback((taskKey) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.key !== taskKey));
-  };
+  }, []);
 
   // Функция удаления категории и связанных с ней задач
-  const removeCategory = (categoryKey) => {
+  const removeCategory = useCallback((categoryKey) => {
     setCategories((prevCategories) => prevCategories.filter((category) => category.key !== categoryKey));
     setTasks((prevTasks) => prevTasks.filter((task) => task.category !== categoryKey));
-  };
+  }, []);
 
   // Рендеринг задач по категориям
-  const renderTasksByCategory = () => {
+  const renderTasksByCategory = useCallback(() => {
     return categories.map((category) => (
       <View key={category.key} style={styles.categorySection}>
         <View style={styles.categoryHeader}>
@@ -112,19 +116,19 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         />
       </View>
     ));
-  };
+  }, [categories, tasks, isDarkTheme, navigation, removeCategory, removeTask]);
 
   // Получение стиля для фона
-  const getBackgroundStyle = () => {
+  const getBackgroundStyle = useCallback(() => {
     if (backgroundImage) {
       return { uri: backgroundImage };
     } else {
       return isDarkTheme ? styles.darkTheme.background : styles.lightTheme.background;
     }
-  };
+  }, [backgroundImage, isDarkTheme]);
 
   return (
-    <ImageBackground source={backgroundImage ? { uri: backgroundImage } : null} style={isDarkTheme ? styles.darkTheme.background : styles.lightTheme.background}>
+    <ImageBackground source={backgroundImage ? { uri: backgroundImage } : null} style={getBackgroundStyle()}>
       <ScrollView style={isDarkTheme ? styles.darkTheme.container : styles.lightTheme.container}>
         <TaskInput onAddTask={addTask} categories={categories} isDarkTheme={isDarkTheme} />
         <CategoryInput onAddCategory={addCategory} isDarkTheme={isDarkTheme} />

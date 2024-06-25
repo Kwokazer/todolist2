@@ -1,5 +1,4 @@
-// TaskScreen.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles, { colors } from '../styles';
 
@@ -17,7 +16,7 @@ const TaskScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(task?.description || '');
 
   // Функция для удаления задачи с подтверждением
-  const handleDeleteTask = () => {
+  const handleDeleteTask = useCallback(() => {
     Alert.alert(
       "Удаление задачи",
       "Вы уверены, что хотите удалить эту задачу?",
@@ -26,24 +25,27 @@ const TaskScreen = ({ route, navigation }) => {
           text: "Отмена",
           style: "cancel"
         },
-        { text: "Удалить", onPress: () => {
-          setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskKey));
-          navigation.goBack();
-        }}
+        { 
+          text: "Удалить",
+          onPress: () => {
+            setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskKey));
+            navigation.goBack();
+          }
+        }
       ],
       { cancelable: true }
     );
-  };
+  }, [taskKey, setTasks, navigation]);
 
   // Функция для сохранения описания задачи
-  const handleSaveDescription = () => {
+  const handleSaveDescription = useCallback(() => {
     setTasks((prevTasks) =>
       prevTasks.map((t) =>
         t.key === taskKey ? { ...t, description } : t
       )
     );
     navigation.goBack();
-  };
+  }, [taskKey, description, setTasks, navigation]);
 
   // Если задача не найдена, отображаем соответствующее сообщение
   if (!task) {
