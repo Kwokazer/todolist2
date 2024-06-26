@@ -1,9 +1,12 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ImagePicker from './ImagePicker';
 import styles from '../styles';
 
-const TaskItem = ({ task, isDarkTheme, onRemove }) => {
+const TaskItem = ({ task, isDarkTheme, onRemove, onImageSelected }) => {
+  const [backgroundImage, setBackgroundImage] = useState(task.image || null);
+
   const showDeleteConfirmation = () => {
     Alert.alert(
       "Удаление задачи",
@@ -19,17 +22,25 @@ const TaskItem = ({ task, isDarkTheme, onRemove }) => {
     );
   };
 
+  const handleImageSelected = (uri) => {
+    setBackgroundImage(uri);
+    onImageSelected(task.key, uri);
+  };
+
   return (
-    <View style={isDarkTheme ? styles.darkTheme.taskContainer : styles.lightTheme.taskContainer}>
-      <Text style={isDarkTheme ? styles.darkTheme.taskText : styles.lightTheme.taskText}>{task}</Text>
-      <TouchableOpacity
-        onPress={showDeleteConfirmation}
-        accessibilityRole="button"
-        testID={`removeTaskButton-${task}`}
-      >
-        <Icon name="close" size={24} color="red" />
-      </TouchableOpacity>
-    </View>
+    <ImageBackground source={{ uri: backgroundImage }} style={styles.taskImage}>
+      <View style={isDarkTheme ? styles.darkTheme.taskContainer : styles.lightTheme.taskContainer}>
+        <Text style={isDarkTheme ? styles.darkTheme.taskText : styles.lightTheme.taskText}>{task.value}</Text>
+        <ImagePicker onImageSelected={handleImageSelected} />
+        <TouchableOpacity
+          onPress={showDeleteConfirmation}
+          accessibilityRole="button"
+          testID={`removeTaskButton-${task.value}`}
+        >
+          <Icon name="close" size={24} color="red" />
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 

@@ -195,6 +195,13 @@ const lightTheme = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  taskImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: spacing.medium,
+    marginVertical: spacing.medium,
+    resizeMode: 'cover',
+  },
 });
 
 const darkTheme = StyleSheet.create({
@@ -363,6 +370,13 @@ const darkTheme = StyleSheet.create({
     fontSize: fontSizes.medium,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  taskImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: spacing.medium,
+    marginVertical: spacing.medium,
+    resizeMode: 'cover',
   },
 });
 

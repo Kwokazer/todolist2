@@ -95,6 +95,12 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.key !== taskKey));
   }, []);
 
+  const updateTaskImage = useCallback((taskKey, imageUri) => {
+    setTasks((prevTasks) => prevTasks.map((task) =>
+      task.key === taskKey ? { ...task, image: imageUri } : task
+    ));
+  }, []);
+
   // Функция удаления категории и связанных с ней задач
   const removeCategory = useCallback((categoryKey) => {
     setCategories((prevCategories) => prevCategories.filter((category) => category.key !== categoryKey));
@@ -125,9 +131,10 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
             <TouchableOpacity onPress={() => navigation.navigate('TaskScreen', { taskKey: item.key, tasks, setTasks, isDarkTheme, categories })}>
               <TaskItem
                 testID={`task-${item.key}`} // Unique testID for tasks
-                task={item.value}
+                task={item}
                 isDarkTheme={isDarkTheme}
                 onRemove={() => removeTask(item.key)}
+                onImageSelected={updateTaskImage} // Новый пропс
               />
             </TouchableOpacity>
           )}
@@ -136,7 +143,8 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
         />
       </View>
     ));
-  }, [categories, tasks, isDarkTheme, navigation, removeCategory, removeTask]);
+  }, [categories, tasks, isDarkTheme, navigation, removeCategory, removeTask, updateTaskImage]);
+  
 
   // Получение стиля для фона
   const getBackgroundStyle = useCallback(() => {
