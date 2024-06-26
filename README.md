@@ -43,14 +43,27 @@ Make sure you have an iOS or Android emulator installed and running.
 Press `i` to open on iOS emulator or `a` to open on Android emulator from the Expo server page.
 
 
-- App.js - The entry point of the application.
-- components/ - Contains the reusable components of the application.
-  - TaskInput.js - Component for adding tasks.
-  - TaskItem.js - Component for displaying a single task.
-- screens/ - Contains the screen components of the application.
-  - ToDoScreen.js - Screen for displaying and adding tasks.
-  - TaskScreen.js - Screen for displaying task details.
-- styles/ - Contains the styles for the application.
+- `App.js` - The entry point of the application.
+- `components/` - Contains the reusable components of the application.
+  - `TaskInput.js` - Component for adding tasks.
+  - `TaskItem.js` - Component for displaying a single task.
+  - `ImagePicker.js` - Component for picking images.
+  - `CategoryInput.js` - Component for adding new categories.
+  - `ThemeSwitcher.js` - Component for toggling between dark and light themes.
+- `screens/` - Contains the screen components of the application.
+  - `ToDoScreen.js` - Screen for displaying and adding tasks.
+  - `TaskScreen.js` - Screen for displaying task details.
+- `styles/` - Contains the styles for the application.
+- `utils/` - Contains utility functions and modules.
+  - `Notification.js` - Utility for handling notifications.
+- `__tests__/` - Contains test files for the application.
+    - `components/`
+        - `CategoryInput.test.js` - Test file for CategoryInput component.
+        - `TaskItem.test.js` - Test file for TaskItem component.
+        - `ThemeSwitcher.test.js` - Test file for ThemeSwitcher component.
+    - `screens/`
+        - `ToDoScreen.test.js` - Test file for ToDoScreen component.
+- `assets/` - Contains the assets like images and icons.
 
 Using AsyncStorage
 The application uses `@react-native-async-storage/async-storage` to persist tasks between sessions. Make sure the package is installed by running `npm install`.
