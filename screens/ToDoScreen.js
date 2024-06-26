@@ -80,11 +80,16 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
   // Функция добавления категории
   const addCategory = useCallback((category) => {
     if (category.length > 0) {
-      // Добавление категории в список
-      setCategories((prevCategories) => [...prevCategories, { key: Math.random().toString(), value: category }]);
+      // Проверка на существование категории с таким же именем
+      if (!categories.some(cat => cat.value.toLowerCase() === category.toLowerCase())) {
+        setCategories((prevCategories) => [...prevCategories, { key: Math.random().toString(), value: category }]);
+        return true;
+      } else {
+        return false;
+      }
     }
-  }, []);
-
+    return false;
+  }, [categories]);
   // Функция удаления задачи
   const removeTask = useCallback((taskKey) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.key !== taskKey));
@@ -101,14 +106,29 @@ const ToDoScreen = ({ navigation, isDarkTheme }) => {
     return categories.map((category) => (
       <View key={category.key} style={styles.categorySection}>
         <View style={styles.categoryHeader}>
-          <Text style={isDarkTheme ? styles.darkTheme.categoryText : styles.lightTheme.categoryText}>{category.value}</Text>
-          <Button title="Удалить" onPress={() => removeCategory(category.key)} color={colors.primary} />
+          <Text
+            testID={`category-${category.key}`} // Unique testID for categories
+            style={isDarkTheme ? styles.darkTheme.categoryText : styles.lightTheme.categoryText}
+          >
+            {category.value}
+          </Text>
+          <Button
+            testID={`removeCategoryButton-${category.key}`} // Unique testID for category remove button
+            title="Удалить"
+            onPress={() => removeCategory(category.key)}
+            color={colors.primary}
+          />
         </View>
         <FlatList
           data={tasks.filter((task) => task.category === category.key)}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => navigation.navigate('TaskScreen', { taskKey: item.key, tasks, setTasks, isDarkTheme, categories })}>
-              <TaskItem task={item.value} isDarkTheme={isDarkTheme} onRemove={() => removeTask(item.key)} />
+              <TaskItem
+                testID={`task-${item.key}`} // Unique testID for tasks
+                task={item.value}
+                isDarkTheme={isDarkTheme}
+                onRemove={() => removeTask(item.key)}
+              />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.key}
