@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Modal, Button } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Импорт компонента Picker из библиотеки react-native-picker
-import styles, { colors } from '../styles'; // Импорт стилей и цветов из файла styles
+import { Picker } from '@react-native-picker/picker';
+import styles, { colors } from '../styles';
 
 // Компонент для ввода новой задачи
 const TaskInput = ({ onAddTask, categories, isDarkTheme }) => {
@@ -36,6 +36,7 @@ const TaskInput = ({ onAddTask, categories, isDarkTheme }) => {
           placeholderTextColor={isDarkTheme ? colors.textPrimaryDark : colors.textPrimaryLight}
           value={task}
           onChangeText={setTask}
+          testID="taskInputField"
         />
         {/* Если категорий больше одной, отображаем кнопку выбора категории и модальное окно */}
         {categories.length > 1 ? (
@@ -78,8 +79,12 @@ const TaskInput = ({ onAddTask, categories, isDarkTheme }) => {
           </Text>
         )}
         {/* Кнопка для добавления задачи */}
-        <TouchableOpacity style={isDarkTheme ? styles.darkTheme.addButton : styles.lightTheme.addButton} onPress={handleAddTask}>
-          <Text style={isDarkTheme ? styles.darkTheme.addButtonText : styles.lightTheme.addButtonText}>Добавить</Text>
+        <TouchableOpacity
+          style={isDarkTheme ? styles.darkTheme.addButton : styles.lightTheme.addButton}
+          onPress={handleAddTask}
+          testID="addTaskButton"
+        >
+          <Text style={isDarkTheme ? styles.darkTheme.addButtonText : styles.lightTheme.addButtonText}>Добавить з</Text>
         </TouchableOpacity>
       </View>
     </View>
